@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FableHauntedElmish", "FableHauntedElmish\FableHauntedElmish.fsproj", "{0D505FA5-82FD-486C-A277-016C74287CD1}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Fable.Haunted.Elmish", "src\Fable.Haunted.Elmish\Fable.Haunted.Elmish.fsproj", "{1A853C71-3567-49A4-8331-987C63B9B852}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0D505FA5-82FD-486C-A277-016C74287CD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0D505FA5-82FD-486C-A277-016C74287CD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0D505FA5-82FD-486C-A277-016C74287CD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0D505FA5-82FD-486C-A277-016C74287CD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A853C71-3567-49A4-8331-987C63B9B852}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A853C71-3567-49A4-8331-987C63B9B852}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A853C71-3567-49A4-8331-987C63B9B852}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A853C71-3567-49A4-8331-987C63B9B852}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
