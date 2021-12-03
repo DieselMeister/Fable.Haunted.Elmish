@@ -8,7 +8,7 @@ module Demo =
     open Haunted.Elmish
     open Browser.Types
     open System
-    open 
+    open Fable.SimpleHttp
 
     type Model = {
         Todos: string list
@@ -70,13 +70,24 @@ module Demo =
                 else
                     dispatch <| ChangeAddNewValue ev.target.Value 
 
+        use
+
         html $"""
             <h2>F#ncy Todo with Haunted and Lit</h2>
+            <br />
+            <br />
+            <button @click={fun _ -> dispatch LoadTodos}>Load Todos</button>
+            <br />
+            <br />
+
             {items}
+            <br />
             <input 
                 .value={state.AddNewValue} 
                 @keyup={keyup}>
             <button @click={addTodo}>Add Todo</button>
+            <br />
+            <br />
         """
 
 
