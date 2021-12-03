@@ -70,8 +70,6 @@ module Demo =
                 else
                     dispatch <| ChangeAddNewValue ev.target.Value 
 
-        use
-
         html $"""
             <h2>F#ncy Todo with Haunted and Lit</h2>
             <br />
