@@ -8,6 +8,7 @@ module Demo =
     open Haunted.Elmish
     open Browser.Types
     open System
+    open 
 
     type Model = {
         Todos: string list
@@ -19,6 +20,24 @@ module Demo =
         | AddTodo of string
         | RemoveTodo of string
         | ChangeAddNewValue of string
+        | LoadTodos
+        | TodosLoaded of string list
+
+
+    module Commands =
+
+        let loadTodosCmd =
+            fun dispatch ->
+                async {
+                    let! statusCode,content = Http.get "todos.json"
+                    if statusCode = 200 then
+                        let todos: string array = Fable.Core.JS.JSON.parse content :?> string array
+                        dispatch <| TodosLoaded (todos |> Array.toList)
+                }
+                |> Async.StartImmediate
+            |> Cmd.ofSub
+
+
 
 
     let init initTodos =
@@ -33,15 +52,31 @@ module Demo =
             { state with Todos = state.Todos |> List.filter (fun i -> i<> todo)}, Cmd.none
         | ChangeAddNewValue value ->
             { state with AddNewValue = value }, Cmd.none
+        | LoadTodos ->
+            state, Commands.loadTodosCmd
+        | TodosLoaded todos ->
+            { state with Todos = todos }, Cmd.none
 
 
     let viewLit state dispatch =
-        let items = state.Todos |> List.map (fun i -> html $"""<li>{i}</li><button @click={fun _ -> dispatch <| RemoveTodo i}>Remove</button>""")
+        let items = state.Todos |> List.map (fun i -> html $"""<li>{i}<button @click={fun _ -> dispatch <| RemoveTodo i}>Remove</button></li>""")
+        
+        let addTodo = fun _ -> dispatch <| AddTodo state.AddNewValue
+
+        let keyup = 
+            fun (ev:KeyboardEvent) -> 
+                if (ev.key = "Enter") then
+                    addTodo ()
+                else
+                    dispatch <| ChangeAddNewValue ev.target.Value 
+
         html $"""
             <h2>F#ncy Todo with Haunted and Lit</h2>
             {items}
-            <input .value={state.AddNewValue} @keyup={fun (ev:Event) -> dispatch <| ChangeAddNewValue ev.target.Value })>
-            <button @click={fun _ -> dispatch <| AddTodo state.AddNewValue}>Add Todo</button>
+            <input 
+                .value={state.AddNewValue} 
+                @keyup={keyup}>
+            <button @click={addTodo}>Add Todo</button>
         """
 
 
@@ -56,10 +91,10 @@ module Demo =
 
 
 
-    defineComponent "fancy_todo_lit" 
+    defineComponent "fancy-todo-lit" 
         (Haunted.Component(fancy_todo_lit_element, 
             {| 
-                observableAttributes = [| "todos"|]
+                observedAttributes  = [| "todos" |]
                 useShadowDom = true
             |}))
         
