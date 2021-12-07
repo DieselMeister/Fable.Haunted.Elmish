@@ -1,4 +1,7 @@
-﻿namespace Fable.Haunted.UseElmish.Sample
+﻿
+
+
+namespace Fable.Haunted.UseElmish.Sample
 
 module Demo =
 
@@ -9,6 +12,7 @@ module Demo =
     open Browser.Types
     open System
     open Fable.SimpleHttp
+    open Fable.Core.JsInterop
 
     type Model = {
         Todos: string list
@@ -96,49 +100,9 @@ module Demo =
         let todoStr = defaultArg props.todos ""
         let todos = todoStr.Split([|","|], StringSplitOptions.RemoveEmptyEntries) |> Array.toList;
 
-        let styling = fun () -> 
-            css $""" 
-                :host {{
-                    background:grey;
-                    overflow: auto;
-                    font-family: sans-serif;
-                }}
+        let styling = importDefault "./styling.scss"
 
-                li {{
-                    display        : flex;
-                    flex-direction : row;
-                    justify-content: flex-start;
-                    align-items    : center;
-                    gap: 30px;
-                }}
-
-                button {{
-                    padding      : 10px 46px;
-                    background   : #303AB2 0%% 0%% no-repeat padding-box;
-                    border-radius: 6px;
-                    border       : none;
-                    outline      : none;
-                    cursor       : pointer;
-
-                    font-size: 16px;
-                    color    : #FFFFFF;
-                }}
-
-                button:hover {{
-                    background-color: #172199;
-                }}
-
-                button:disabled {{
-                    background-color: #7E84D1;
-                }}
-
-                button:active {{
-                    background-color: #101980;
-                }}
-
-            """
-
-        let state,dispatch = Haunted.useElmishWithStyling(init, update, todos, styling)
+        let state,dispatch = Haunted.useElmishWithStyling(init, update, todos, [ styling ])
 
         viewLit state dispatch
 

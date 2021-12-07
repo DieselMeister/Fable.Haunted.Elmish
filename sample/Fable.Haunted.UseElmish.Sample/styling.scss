@@ -1,0 +1,33 @@
+:host {
+    background: grey;
+    overflow: auto;
+    font-family: sans-serif;
+}
+
+li {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 30px;
+}
+button {
+    padding: 10px 46px;
+    background: #303AB2 0% 0% no-repeat padding-box;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #FFFFFF;
+}
+
+button:hover {
+    background-color: #172199;
+}
+button:disabled {
+    background-color: #7E84D1;
+}
+button:active {
+    background-color: #101980;
+}

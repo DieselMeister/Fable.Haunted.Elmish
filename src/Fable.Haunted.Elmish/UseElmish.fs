@@ -50,7 +50,6 @@ module InjectStyle =
                 }
             );
         """
-        
 
 
 
@@ -101,13 +100,16 @@ module UseElmishExtensions =
 
     type Haunted with
 
-        static member useElmish(program: unit -> Program<'Arg, 'Model, 'Msg, unit>, arg: 'Arg, ?styling:(unit->Lit.CSSResult), ?dependencies: obj array) =
+        static member useElmish(program: unit -> Program<'Arg, 'Model, 'Msg, unit>, arg: 'Arg, ?styling:Lit.CSSResult list, ?dependencies: obj array) =
             let obs, _ = Haunted.useState<ElmishObservable<'Model, 'Msg>> (fun () -> ElmishObservable<'Model, 'Msg>())
             let state, setState = Haunted.useState<'Model>(runProgram program arg obs)
 
             styling
-            |> Option.iter (fun styling ->
-                InjectStyle.useStyles styling
+            |> Option.iter (fun stylings ->
+                stylings
+                |> List.iter (fun styling ->
+                    InjectStyle.useStyles (fun () -> styling)
+                )
             )
 
             Haunted.useEffect((fun () ->
@@ -116,6 +118,8 @@ module UseElmishExtensions =
 
             obs.Subscribe(setState)
             state, obs.Dispatch
+
+       
 
         static member useElmish(program: unit -> Program<unit, 'Model, 'Msg, unit>, ?dependencies: obj array) =
             Haunted.useElmish(program, (), ?dependencies=dependencies)
@@ -131,15 +135,16 @@ module UseElmishExtensions =
         static member useElmish(init: 'Model * Cmd<'Msg>, update: 'Msg -> 'Model -> 'Model * Cmd<'Msg>, ?dependencies: obj array) =
             Haunted.useElmish((fun () -> Program.mkProgram (fun () -> init) update (fun _ _ -> ())), ?dependencies=dependencies)
 
-
-        static member useElmishWithStyling(program: unit -> Program<unit, 'Model, 'Msg, unit>, ?styling:(unit->Lit.CSSResult), ?dependencies: obj array) =
+        
+        
+        static member useElmishWithStyling(program: unit -> Program<unit, 'Model, 'Msg, unit>, ?styling:Lit.CSSResult list, ?dependencies: obj array) =
             Haunted.useElmish(program, (), ?styling = styling, ?dependencies=dependencies)
 
-        static member useElmishWithStyling(init: 'Arg -> 'Model * Cmd<'Msg>, update: 'Msg -> 'Model -> 'Model * Cmd<'Msg>, arg: 'Arg, ?styling:(unit->Lit.CSSResult), ?dependencies: obj array) =
+        static member useElmishWithStyling(init: 'Arg -> 'Model * Cmd<'Msg>, update: 'Msg -> 'Model -> 'Model * Cmd<'Msg>, arg: 'Arg, ?styling:Lit.CSSResult list, ?dependencies: obj array) =
             Haunted.useElmish((fun () -> Program.mkProgram init update (fun _ _ -> ())), arg, ?styling = styling, ?dependencies=dependencies)
 
-        static member useElmishWithStyling(init: unit -> 'Model * Cmd<'Msg>, update: 'Msg -> 'Model -> 'Model * Cmd<'Msg>, ?styling:(unit->Lit.CSSResult), ?dependencies: obj array) =
+        static member useElmishWithStyling(init: unit -> 'Model * Cmd<'Msg>, update: 'Msg -> 'Model -> 'Model * Cmd<'Msg>, ?styling:Lit.CSSResult list, ?dependencies: obj array) =
             Haunted.useElmishWithStyling((fun () -> Program.mkProgram init update (fun _ _ -> ())), ?styling = styling, ?dependencies=dependencies)
 
-        static member useElmishWithStyling(init: 'Model * Cmd<'Msg>, update: 'Msg -> 'Model -> 'Model * Cmd<'Msg>, ?styling:(unit->Lit.CSSResult), ?dependencies: obj array) =
+        static member useElmishWithStyling(init: 'Model * Cmd<'Msg>, update: 'Msg -> 'Model -> 'Model * Cmd<'Msg>, ?styling:Lit.CSSResult list, ?dependencies: obj array) =
             Haunted.useElmishWithStyling((fun () -> Program.mkProgram (fun () -> init) update (fun _ _ -> ())), ?styling = styling, ?dependencies=dependencies)

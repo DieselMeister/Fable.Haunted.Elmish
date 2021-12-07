@@ -10,6 +10,8 @@ var MiniCssExtractPlugin = require("mini-css-extract-plugin");
 var Dotenv = require('dotenv-webpack');
 var realFs = require('fs');
 var gracefulFs = require('graceful-fs');
+const Sass = require('sass');
+
 
 gracefulFs.gracefulify(realFs);
 
@@ -93,16 +95,14 @@ module.exports = {
     //},
     plugins: isProduction ?
         commonPlugins.concat([
-            new MiniCssExtractPlugin({ filename: '[name].[chunkhash].css' }),
             new CopyWebpackPlugin({
                 patterns: [
                     { from: resolve(CONFIG.assetsDir) }
                 ]
-            }),
+            })
         ])
         : commonPlugins.concat([
-            new webpack.HotModuleReplacementPlugin(),
-            //new ReactRefreshWebpackPlugin()
+            new webpack.HotModuleReplacementPlugin()
         ]),
     // Configuration for webpack-dev-server
     devServer: {
@@ -124,15 +124,20 @@ module.exports = {
                 use: ['source-map-loader'],
             },
             {
-                test: /\.(sass|scss|css)$/,
-                use: [
-                    isProduction
-                        ? MiniCssExtractPlugin.loader
-                        : 'style-loader',
-                    'css-loader',
-                    'resolve-url-loader',
-                    'postcss-loader'
-                ],
+                test: /\.scss$/,
+                loader: 'lit-css-loader',
+                options: {
+                    transform: (data, { filePath }) =>
+                        Sass.renderSync({ data, file: filePath })
+                            .css.toString(),
+                }
+            },
+            {
+                test: /\.css$/,
+                loader: 'lit-css-loader',
+                options: {
+                    specifier: 'lit-element' // defaults to `lit`
+                }
             }
         ]
     }
